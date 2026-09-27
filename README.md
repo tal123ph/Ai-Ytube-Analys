@@ -2,6 +2,14 @@
 
 Transform any video into actionable insights — instantly generate text summaries, key points, and audio briefings from YouTube videos using AI.
 
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![CrewAI](https://img.shields.io/badge/CrewAI-orchestration-FF6F00)
+![Gemini](https://img.shields.io/badge/Google%20Gemini%203.5%20Flash-AI%20Model-4285F4?logo=googlegemini&logoColor=white)
+![gTTS](https://img.shields.io/badge/gTTS-Text--to--Speech-F9AB00)
+![Uvicorn](https://img.shields.io/badge/Uvicorn-server-2E3440)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 <img src="images/homepage.png" alt="AI Video Analyst Home" width="800">
 
 ---
