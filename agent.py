@@ -13,7 +13,7 @@ async def run_video_analysis(video_url: str, prompt: str) -> str:
     if not api_key or api_key.startswith("AIza..."):
         return "Error: Please set a valid GEMINI_API_KEY in your .env file."
 
-    llm = LLM(model="gemini/gemini-3.1-pro-preview", api_key=api_key)
+    llm = LLM(model="gemini/gemini-3.5-flash", api_key=api_key)
 
     video_analyst = Agent(
         role="Video Analyst",

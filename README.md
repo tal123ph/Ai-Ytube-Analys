@@ -24,7 +24,7 @@ Transform any video into actionable insights — instantly generate text summari
 |---|---|
 | Backend API | **FastAPI** (Python) |
 | AI Orchestration | **CrewAI** |
-| AI Model | **Google Gemini** |
+| AI Model | **Google Gemini 3.5 Flash** |
 | Text-to-Speech | **gTTS** (Google Text-to-Speech) |
 | Frontend | Static HTML/CSS/JavaScript (single-page UI) |
 | Config | `python-dotenv` (environment variable management) |
@@ -44,6 +44,8 @@ Submit a video URL and an optional custom prompt — the AI agent analyzes the c
 
 ### 2. Audio Summary Generation
 Once a text summary is generated, it's converted to speech via **gTTS** and returned as an MP3 — ideal for listening on the go.
+
+The audio feature generates speech from the summary text; it does not extract or transcribe the video's original audio.
 
 ---
 
@@ -150,7 +152,15 @@ GEMINI_API_KEY=your_google_gemini_api_key_here
 uvicorn main:app --reload
 ```
 
-Then open your browser at `http://localhost:8000`.
+Open the frontend at `http://localhost:8000/static/index.html`. Keep the server running while using the page. The API status is available at `http://localhost:8000/`, and interactive API documentation is at `http://localhost:8000/docs`.
+
+### Use Text and Audio Summaries
+
+1. In the frontend, open **Text Summary** or **Audio Summary**.
+2. Enter a YouTube video URL and the instructions for the summary.
+3. Submit the form. For an audio summary, wait for the MP3 to be generated, then play it in the page or download it.
+
+The CrewAI agent and direct Gemini video tool currently use `gemini-3.5-flash`. Audio is generated with gTTS and requires an internet connection.
 
 ---
 

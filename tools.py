@@ -60,7 +60,7 @@ class VideoSummaryArgs(BaseModel):
         description="Instruction for how to summarize"
     )
     stream: Optional[bool] = Field(default=False, description="If True, uses server-side streaming")
-    model: Optional[str] = Field(default="gemini-3.1-pro-preview", description="Gemini model name")
+    model: Optional[str] = Field(default="gemini-3.5-flash", description="Gemini model name")
     mime_type: Optional[str] = Field(default="video/*", description="Video MIME type")
     response_mime_type: Optional[str] = Field(default="text/plain", description="Response format")
 
@@ -73,7 +73,7 @@ class SummarizeVideoGeminiTool(BaseTool):
         video_url: A YouTube or direct video URL.
         prompt:    Instruction for how to summarize.
         stream:    If True, uses server-side streaming.
-        model:     Gemini model name, e.g. 'gemini-3.1-pro-preview'.
+        model:     Gemini model name, e.g. 'gemini-3.5-flash'.
         mime_type: Usually 'video/*'.
         response_mime_type: 'text/plain' only (not 'text/markdown').
 
@@ -87,7 +87,7 @@ class SummarizeVideoGeminiTool(BaseTool):
         video_url: str,
         prompt: str = "Generate a detailed summary with key points and timestamps (if available).",
         stream: bool = False,
-        model: str = "gemini-3.1-pro-preview",
+        model: str = "gemini-3.5-flash",
         mime_type: str = "video/*",
         response_mime_type: str = "text/plain",
     ) -> str:
