@@ -2,7 +2,7 @@
 
 Transform any video into actionable insights — instantly generate text summaries, key points, and audio briefings from YouTube videos using AI.
 
-![AI Video Analyst Home](./screenshots/homepage.png)
+<img src="images/homepage.png" alt="AI Video Analyst Home" width="800">
 
 ---
 
@@ -53,11 +53,11 @@ The audio feature generates speech from the summary text; it does not extract or
 
 **Home Page**
 
-![Home Page](./screenshots/homepage.png)
+<img src="images/homepage.png" alt="AI Video Analyst Home" width="800">
 
 **Text Summary Generator**
 
-![Text Summary Page](./screenshots/text-summary.png)
+<img src="images/summarize.png" alt="AI Video Analyst Home" width="800">
 
 ---
 
