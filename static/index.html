@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Video Analyst</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom animation classes triggered via JavaScript */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Loading spinner */
+        .loader {
+            border-top-color: #3b82f6;
+            -webkit-animation: spinner 1.5s linear infinite;
+            animation: spinner 1.5s linear infinite;
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center space-x-2 cursor-pointer" onclick="switchTab('home')">
+                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    <span class="font-bold text-xl tracking-tight">AI Video Analyst</span>
+                </div>
+                <div class="flex space-x-4 items-center">
+                    <button onclick="switchTab('home')" id="tab-home" class="px-3 py-2 text-blue-600 font-medium border-b-2 border-blue-600 transition-colors">Home</button>
+                    <button onclick="switchTab('text')" id="tab-text" class="px-3 py-2 text-gray-500 hover:text-blue-600 font-medium border-b-2 border-transparent transition-colors">Text Summary</button>
+                    <button onclick="switchTab('audio')" id="tab-audio" class="px-3 py-2 text-gray-500 hover:text-blue-600 font-medium border-b-2 border-transparent transition-colors">Audio Summary</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow">
+        
+        <!-- ================= HOME VIEW ================= -->
+        <div id="view-home" class="block">
+            <!-- Hero Section -->
+            <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20 text-center">
+                <div class="max-w-4xl mx-auto px-4 fade-in-up">
+                    <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight">Transform Any Video Into Actionable Insights</h1>
+                    <p class="text-lg md:text-xl text-blue-100 mb-10">Powered by Google Gemini & CrewAI, instantly extract summaries, key points, and audio briefings from lengthy video content.</p>
+                    <button onclick="switchTab('text')" class="bg-white text-blue-600 px-8 py-3 rounded-full font-bold shadow-lg hover:bg-gray-100 transform hover:-translate-y-1 transition-all duration-300">
+                        Try It Now
+                    </button>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="py-16 max-w-6xl mx-auto px-4">
+                <div class="text-center mb-16 fade-in-up">
+                    <h2 class="text-3xl font-bold text-gray-800">Powerful Features</h2>
+                    <p class="text-gray-500 mt-4">Everything you need to digest video content efficiently.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12">
+                    <!-- Feature 1 -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden fade-in-up transform transition duration-500 hover:scale-[1.02]">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2 text-blue-600">Detailed Text Analysis</h3>
+                            <p class="text-gray-600">Provide any YouTube URL and let our Agentic AI break down the video into readable paragraphs, bullet points, and actionable items. Never sit through a 2-hour tutorial again.</p>
+                        </div>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden fade-in-up transform transition duration-500 hover:scale-[1.02]">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2 text-indigo-600">On-the-Go Audio Briefings</h3>
+                            <p class="text-gray-600">Convert your highly-compressed AI summaries directly into high-quality MP3 audio files. Perfect for listening to seminar notes or lecture summaries while commuting.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ================= TEXT SUMMARY VIEW ================= -->
+        <div id="view-text" class="hidden max-w-3xl mx-auto px-4 py-12">
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">Generate Text Summary</h2>
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Video URL</label>
+                <input type="text" id="text-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 mb-4">
+                
+                <label class="block text-sm font-medium text-gray-700 mb-2">Custom Prompt (Optional)</label>
+                <textarea id="text-prompt" rows="3" class="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 mb-4">Summarize this video and provide a list of action items.</textarea>
+                
+                <button onclick="generateText()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">Analyze Video</button>
+                
+                <!-- Loading State -->
+                <div id="text-loading" class="hidden mt-6 flex flex-col items-center justify-center">
+                    <div class="loader border-4 border-gray-200 rounded-full w-10 h-10 mb-4"></div>
+                    <p class="text-gray-500">Agent is analyzing the video. This may take a minute...</p>
+                </div>
+
+                <!-- Result Box -->
+                <div id="text-result-box" class="hidden mt-6">
+                    <h3 class="font-bold text-lg mb-2 text-gray-800">Agent Response:</h3>
+                    <div id="text-result" class="p-4 bg-gray-50 rounded-lg border text-gray-700 whitespace-pre-wrap"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= AUDIO SUMMARY VIEW ================= -->
+        <div id="view-audio" class="hidden max-w-3xl mx-auto px-4 py-12">
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">Generate Audio Briefing</h2>
+            <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-indigo-600">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Video URL</label>
+                <input type="text" id="audio-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-4 py-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 mb-4">
+                
+                <label class="block text-sm font-medium text-gray-700 mb-2">Instructions for Audio</label>
+                <textarea id="audio-prompt" rows="3" class="w-full px-4 py-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 mb-4">Create a brief 3-paragraph executive summary suitable for listening.</textarea>
+                
+                <button onclick="generateAudio()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition">Generate MP3</button>
+                
+                <!-- Loading State -->
+                <div id="audio-loading" class="hidden mt-6 flex flex-col items-center justify-center">
+                    <div class="loader border-4 border-gray-200 rounded-full w-10 h-10 mb-4" style="border-top-color: #4f46e5;"></div>
+                    <p class="text-gray-500">Generating summary and converting to audio...</p>
+                </div>
+
+                <!-- Audio Result Box -->
+                <div id="audio-result-box" class="hidden mt-6 text-center">
+                    <h3 class="font-bold text-lg mb-4 text-gray-800">Your Audio is Ready!</h3>
+                    <audio id="audio-player" controls class="w-full mb-4"></audio>
+                    <a id="audio-download" href="#" download="video_summary.mp3" class="inline-block bg-green-600 text-white px-6 py-2 rounded shadow hover:bg-green-700 transition">Download MP3</a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-6 mt-auto">
+        <p class="text-gray-400">© 2026 AI Video Analyst. Powered by CrewAI & FastAPI.</p>
+    </footer>
+
+    <script>
+        const API_BASE = window.location.origin;
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            // Hide all views
+            document.getElementById('view-home').classList.add('hidden');
+            document.getElementById('view-text').classList.add('hidden');
+            document.getElementById('view-audio').classList.add('hidden');
+            
+            // Reset tab styling
+            const tabs = ['tab-home', 'tab-text', 'tab-audio'];
+            tabs.forEach(t => {
+                document.getElementById(t).classList.remove('text-blue-600', 'border-blue-600');
+                document.getElementById(t).classList.add('text-gray-500', 'border-transparent');
+            });
+
+            // Show selected view
+            document.getElementById('view-' + tabId).classList.remove('hidden');
+            document.getElementById('tab-' + tabId).classList.add('text-blue-600', 'border-blue-600');
+            document.getElementById('tab-' + tabId).classList.remove('text-gray-500', 'border-transparent');
+
+            // Retrigger animations if returning to home
+            if(tabId === 'home') {
+                triggerScrollAnimations();
+            }
+        }
+
+        // Scroll Animation Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        function triggerScrollAnimations() {
+            document.querySelectorAll('.fade-in-up').forEach((el) => {
+                el.classList.remove('visible'); // reset
+                setTimeout(() => observer.observe(el), 50); // re-observe
+            });
+        }
+        
+        // Initialize animations on load
+        document.addEventListener("DOMContentLoaded", triggerScrollAnimations);
+
+        // API Call: Text Summary
+        async function generateText() {
+            const url = document.getElementById('text-url').value;
+            const prompt = document.getElementById('text-prompt').value;
+            if(!url) return alert("Please enter a video URL");
+
+            document.getElementById('text-loading').classList.remove('hidden');
+            document.getElementById('text-result-box').classList.add('hidden');
+
+            try {
+                const response = await fetch(`${API_BASE}/summarize`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ video_url: url, prompt: prompt })
+                });
+                const data = await response.json();
+                
+                if(!response.ok) throw new Error(data.detail || "API Error");
+
+                document.getElementById('text-result').innerText = data.summary;
+                document.getElementById('text-result-box').classList.remove('hidden');
+            } catch (error) {
+                alert("Error: " + error.message);
+            } finally {
+                document.getElementById('text-loading').classList.add('hidden');
+            }
+        }
+
+        // API Call: Audio Summary
+        async function generateAudio() {
+            const url = document.getElementById('audio-url').value;
+            const prompt = document.getElementById('audio-prompt').value;
+            if(!url) return alert("Please enter a video URL");
+
+            document.getElementById('audio-loading').classList.remove('hidden');
+            document.getElementById('audio-result-box').classList.add('hidden');
+
+            try {
+                const response = await fetch(`${API_BASE}/summarize-audio`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ video_url: url, prompt: prompt })
+                });
+
+                if(!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.detail || "API Error");
+                }
+
+                // Convert response to blob for audio playing
+                const blob = await response.blob();
+                const objectUrl = URL.createObjectURL(blob);
+                
+                const audioPlayer = document.getElementById('audio-player');
+                const audioDownload = document.getElementById('audio-download');
+                
+                audioPlayer.src = objectUrl;
+                audioDownload.href = objectUrl;
+                
+                document.getElementById('audio-result-box').classList.remove('hidden');
+            } catch (error) {
+                alert("Error: " + error.message);
+            } finally {
+                document.getElementById('audio-loading').classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
